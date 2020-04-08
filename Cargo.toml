@@ -8,3 +8,6 @@ edition = "2018"
 
 [dependencies]
 device_query = "0.2.3"
+gtk = "0.8.1"
+libappindicator = "0.5.1"
+gdk = "0.12.1"

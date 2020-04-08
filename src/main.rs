@@ -1,3 +1,12 @@
+extern crate gtk;
+extern crate libappindicator;
+
+mod app;
+use app::App;
+
 fn main() {
-    println!("Hello, world!");
+
+    App::init().unwrap();
+
+    gtk::main();
 }
