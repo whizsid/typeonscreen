@@ -151,8 +151,9 @@ impl App {
                 
                 // Clear text after open again
                 let text_buffer = self.text_view.get_buffer().unwrap();
-                let mut bounds = text_buffer.get_bounds();
-                text_buffer.delete(&mut bounds.0, &mut bounds.1);
+                let new_buffer = gtk::TextBuffer::new::<gtk::TextTagTable>(None);
+                self.text_view.set_buffer(Some(&new_buffer));
+                drop(text_buffer);
             }
         };
         self.typing = !self.typing;
