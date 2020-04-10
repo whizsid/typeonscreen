@@ -1,12 +1,13 @@
 use gtk::prelude::*;
 use libappindicator::{AppIndicator, AppIndicatorStatus};
 
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::sync::Arc;
+use std::sync::Mutex;
 
 pub struct App {
     app_indicator: AppIndicator,
     pub toggle_item: gtk::MenuItem,
+    pub exit_item: gtk::MenuItem,
     typing: bool,
     window: gtk::Window,
     pub scrolled_window: gtk::ScrolledWindow,
@@ -14,7 +15,7 @@ pub struct App {
 }
 
 impl App {
-    pub fn init()->Result<Rc<RefCell<App>>,&'static str>{
+    pub fn init()->Result<Arc<Mutex<App>>,&'static str>{
         if let Err(_) = gtk::init() {
             return Err("Can not initial GTK.");
         }
@@ -36,7 +37,7 @@ impl App {
 
         let window = gtk::Window::new(gtk::WindowType::Toplevel);
 
-        // Limiting user from closing and other actions
+        // Hiding window behaviours from the user
         window.set_decorated(false);
         window.maximize();
         window.set_keep_above(true);
@@ -51,7 +52,7 @@ impl App {
         window.set_widget_name("toplevel");
         let css = "
             #toplevel {
-                background-color: rgba(0, 0, 0, 0.5);
+                background-color: rgba(0, 250, 250, 0.7);
             }
             #textview text {
                 color: #ff0000;
@@ -94,9 +95,10 @@ impl App {
         scrolled_window.add(&container);
         window.add(&scrolled_window);
 
-        let app = Rc::new( RefCell::new(App{
+        let app = Arc::new( Mutex::new(App{
             app_indicator: ai,
             toggle_item,
+            exit_item,
             typing: false,
             window,
             scrolled_window,
@@ -107,8 +109,8 @@ impl App {
         {
             let app1 = app.clone();
 
-            app.borrow().toggle_item.connect_activate(move |_|{
-                app1.borrow_mut().toggle_typing();
+            app.lock().unwrap().toggle_item.connect_activate(move |_|{
+                app1.lock().unwrap().toggle_typing();
             });
         }
 
@@ -116,10 +118,10 @@ impl App {
         {
             let app2 = app.clone();
 
-            let text_buffer = app2.borrow().text_view.get_buffer().unwrap();
+            let text_buffer = app2.lock().unwrap().text_view.get_buffer().unwrap();
 
             text_buffer.connect_changed(move |_|{
-                let app_brw_result = app2.try_borrow();
+                let app_brw_result = app2.lock();
 
                 match app_brw_result {
                     Ok(app_brw)=>{
@@ -139,8 +141,8 @@ impl App {
             true=>{
                 self.toggle_item.set_label("Activate Typing");
                 self.app_indicator.set_icon("resources/disable.png");
-                self.window.hide();
 
+                self.window.hide();
             }
             false=>{
                 self.toggle_item.set_label("Deactivate Typing");
@@ -153,7 +155,6 @@ impl App {
                 text_buffer.delete(&mut bounds.0, &mut bounds.1);
             }
         };
-
         self.typing = !self.typing;
     }
 }

@@ -7,7 +7,9 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-device_query = "0.2.3"
+device_query = {git="https://github.com/ostrosco/device_query.git"}
 gtk = "0.8.1"
 libappindicator = "0.5.1"
 gdk = "0.12.1"
+gio = "0.8.1"
+x11 = {version = "2.17.2", features = ["xlib"] }
