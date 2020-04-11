@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=TypeOnScreen
+Icon=typeonscreen
+Exec=typeonscreen
+Categories=Utility;
+Comment=Type on your screen. Say Bye-Bye to NotePad.
+Version=1.0

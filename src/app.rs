@@ -17,6 +17,27 @@ pub struct App {
     config: Config
 }
 
+#[cfg(debug_assertions)]
+const APP_DISABLE_ICON:&'static str = "resources/typeonscreen.svg";
+#[cfg(not(debug_assertions))]
+const APP_DISABLE_ICON:&'static str = "typeonscreen";
+
+#[cfg(debug_assertions)]
+const APP_ENABLE_ICON:&'static str = "resources/typeonscreen-enable.svg";
+#[cfg(not(debug_assertions))]
+const APP_ENABLE_ICON:&'static str = "typeonscreen-enable";
+
+#[cfg(debug_assertions)]
+const APP_LOGO:&'static str = "resources/typeonscreen.svg";
+#[cfg(not(debug_assertions))]
+const APP_LOGO:&'static str = "typeonscreen";
+
+const APP_NAME:&'static str = "TypeOnScreen";
+const APP_DESCRIPTION:&'static str = env!("CARGO_PKG_DESCRIPTION");
+const APP_VERSION:&'static str = env!("CARGO_PKG_VERSION");
+const APP_WEBSITE:&'static str = env!("CARGO_PKG_HOMEPAGE");
+const APP_COPYRIGHT:&'static str ="© 2020 WhizSid";
+
 impl App {
     pub fn init(config: Config) -> Result<Arc<Mutex<App>>, &'static str> {
         if let Err(_) = gtk::init() {
@@ -25,7 +46,7 @@ impl App {
 
         // Indicator
         let mut m = gtk::Menu::new();
-        let mut ai = AppIndicator::new("Type On Screen", "resources/disable.png");
+        let mut ai = AppIndicator::new(APP_NAME, APP_DISABLE_ICON);
         ai.set_status(AppIndicatorStatus::Active);
         ai.set_menu(&mut m);
 
@@ -37,12 +58,22 @@ impl App {
         let about_item = gtk::MenuItem::new_with_label("About");
         about_item.connect_activate(move |_|{
             let about_dialog = gtk::AboutDialog::new();
-            about_dialog.set_program_name("TypeOnScreen");
-            about_dialog.set_version(Some(env!("CARGO_PKG_VERSION")));
-            about_dialog.set_copyright(Some("© 2017 WhizSid"));
-            about_dialog.set_comments(Some("Type on your screen. Say bye to NotePad."));
+            about_dialog.set_program_name(APP_NAME);
+            about_dialog.set_version(Some(APP_VERSION));
+            about_dialog.set_copyright(Some(APP_COPYRIGHT));
+            about_dialog.set_comments(Some(APP_DESCRIPTION));
             about_dialog.set_license_type(gtk::License::MitX11);
-            about_dialog.set_website(Some("https://github.com/whizsid/typeonscreen"));
+            about_dialog.set_website(Some(APP_WEBSITE));
+
+            #[cfg(debug_assertions)]
+            {
+                let pixbuf = gdk_pixbuf::Pixbuf::new_from_resource_at_scale(APP_LOGO,100,100, true).unwrap();
+                about_dialog.set_logo(Some(&pixbuf));
+            }
+            #[cfg(not(debug_assertions))]
+            {
+                about_dialog.set_logo_icon_name(Some(APP_LOGO));
+            }
 
             about_dialog.run();
             about_dialog.destroy();
@@ -51,7 +82,7 @@ impl App {
         m.append(&about_item);
 
         // Exit Item
-        let exit_item = gtk::MenuItem::new_with_label("Exit TypeOnScreen");
+        let exit_item = gtk::MenuItem::new_with_label(&format!("Exit {}",APP_NAME));
         exit_item.connect_activate(move |_| {
             gtk::main_quit();
         });
@@ -180,13 +211,13 @@ impl App {
         match self.typing {
             true => {
                 self.toggle_item.set_label("Activate Typing");
-                self.app_indicator.set_icon("resources/disable.png");
+                self.app_indicator.set_icon(APP_DISABLE_ICON);
 
                 self.window.hide();
             }
             false => {
                 self.toggle_item.set_label("Deactivate Typing");
-                self.app_indicator.set_icon("resources/enable.png");
+                self.app_indicator.set_icon(APP_ENABLE_ICON);
                 self.window.show_all();
 
                 // Clear text after open again
