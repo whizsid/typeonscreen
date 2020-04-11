@@ -8,17 +8,19 @@ pub struct Config {
     pub background_color: String,
     pub font_size: String,
     pub color: String,
-    pub clear_text: bool
+    pub clear_text: bool,
+    pub font_weight: i32,
 }
 
 impl Default for Config {
     fn default()->Config {
         Config {
             font_family: String::from("monospace"),
-            background_color: String::from("rgba(0, 250, 250, 0.7)"),
-            font_size: String::from("40px"),
-            color: String::from("#ff0000"),
-            clear_text: true
+            background_color: String::from("rgba(27, 42, 61, 0.85)"),
+            font_size: String::from("48px"),
+            color: String::from("#fff"),
+            clear_text: true,
+            font_weight: 800
         }
     }
 }

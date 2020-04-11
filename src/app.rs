@@ -115,9 +115,10 @@ impl App {
                 background: transparent;
                 font-size: {};
                 font-family: {};
+                font-weight: {};
             }}
         ",
-            config.background_color, config.color, config.font_size, config.font_family
+            config.background_color, config.color, config.font_size, config.font_family, config.font_weight
         );
         let style_provider = gtk::CssProvider::new();
         style_provider.load_from_data(css.as_bytes()).unwrap();

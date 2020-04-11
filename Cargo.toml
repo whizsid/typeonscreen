@@ -5,6 +5,9 @@ authors = ["WhizSid <whizsid@aol.com>"]
 edition = "2018"
 repository = "https://github.com/whizsid/typeonscreen"
 homepage = "https://github.com/whizsid/typeonscreen"
+readme ="README.md"
+description="Type on screen while screen recording."
+keywords=["type","screen","record","youtube"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -16,3 +19,19 @@ gdk = "0.12.1"
 confy = "0.4.0"
 serde = { version = "1.0.106", features = ["derive"] }
 gdk-pixbuf ="0.8.0"
+
+[package.metadata.deb]
+maintainer = "WhizSid <whizsid@aol.com>"
+copyright = "2020, WhizSid <whizsid@aol.com>"
+license-file = ["LICENSE", "3"]
+depends = "$auto, libappindicator-gtk3, libx11, gtk3"
+extended-description = """\
+You can type on your screen while recording your screen. This software will replaces your NotePad software."""
+section = "utils"
+priority = "optional"
+assets = [
+    ["resources/typeonscreen-enable.svg", "usr/local/share/icons/hicolor/scalable/apps/", "644"],
+    ["resources/typeonscreen.svg", "usr/local/share/icons/hicolor/scalable/apps/", "644"],
+    ["resources/typeonscreen.desktop", "usr/local/share/applications/", "644"],
+    ["target/release/typeonscreen", "usr/local/bin/", "755"]
+]
