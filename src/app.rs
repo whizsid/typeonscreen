@@ -51,7 +51,7 @@ impl App {
         ai.set_menu(&mut m);
 
         // Toggle Item
-        let toggle_item = gtk::MenuItem::new_with_label("Activate Typing");
+        let toggle_item = gtk::MenuItem::new_with_label("Activate Typing (Ctrl + F6)");
         m.append(&toggle_item);
 
         // About Me
@@ -211,13 +211,13 @@ impl App {
     pub fn toggle_typing(&mut self) {
         match self.typing {
             true => {
-                self.toggle_item.set_label("Activate Typing");
+                self.toggle_item.set_label("Activate Typing (Ctrl + F6)");
                 self.app_indicator.set_icon(APP_DISABLE_ICON);
 
                 self.window.hide();
             }
             false => {
-                self.toggle_item.set_label("Deactivate Typing");
+                self.toggle_item.set_label("Deactivate Typing (Ctrl + F6)");
                 self.app_indicator.set_icon(APP_ENABLE_ICON);
                 self.window.show_all();
 
